@@ -1,6 +1,6 @@
-#==================================
+#=============================================
 # 1. Importação e Configurações
-#==================================
+#=============================================
 import numpy as np
 from sklearn.datasets import load_iris
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
@@ -10,9 +10,9 @@ from sklearn.model_selection import train_test_split
 np.random.seed(42)
 
 
-#==================================
+#=============================================
 # 2. Pré-processamento de dados
-#==================================
+#=============================================
 iris = load_iris()
 X = iris.data                      # (150, 4) -> 4 características (comprimento e largura da sépala e da pétala)
 y = iris.target.reshape(-1, 1)     # (150, 1) -> classes 0, 1 ou 2
@@ -35,9 +35,9 @@ X_test = scaler.transform(X_test)
 #print("Teste: ", X_test.shape, Y_test.shape)
 
 
-#==================================
+#=============================================
 # 3. Funções de ativação e perda
-#==================================
+#=============================================
 def relu(Z):                       # Aplica a fórmula ReLU (negativos viram 0 e positivos passam iguais)
     return np.maximum(0, Z)    # np.maximum aplica a fórmula para toda a matriz
 
@@ -59,9 +59,9 @@ def cross_entropy(Y_real, Y_prev):      # Implementa a Entropia Cruzada
 #print(softmax(np.array([[3.2, 1.1, -0.5]])))
 
 
-#==================================
+#=============================================
 # 4. Arquitetura e parâmetros
-#==================================
+#=============================================
 n_entrada = 4      # 4 características do Iris
 n_escondida = 8    # 8 neurônios na camada escondida
 n_saida = 3        # 3 classes
@@ -112,3 +112,29 @@ for epoca in range(epocas):
 
     if epoca % 100 == 0 or epoca == epocas - 1:
         print(f"Época {epoca:4d} | Perda: {perda:.4f}")
+
+
+#=============================================
+# 4. Avaliação do Modelo
+#=============================================
+def prever(X):   # Mesmo Forward pass do treino, sem backward
+    Z1 = X @ W1 + b1
+    A1 = relu(Z1)
+    Z2 = A1 @ W2 + b2
+    A2 = softmax(Z2)
+    return A2
+
+# Inferência no conjunto de teste
+probs_teste = prever(X_test)
+classes_previstas = np.argmax(probs_teste, axis=1)
+classes_reais = np.argmax(Y_test, axis=1)
+
+acuracia_teste = np.mean(classes_previstas == classes_reais)
+
+# Acurácia no treino, para comparação
+acuracia_treino = np.mean(
+    np.argmax(prever(X_train), axis=1) == np.argmax(Y_train, axis=1)
+)
+
+print(f"\nAcurácia no treino: {acuracia_treino * 100:.2f}%")
+print(f"Acurácia no teste:  {acuracia_teste * 100:.2f}%")
