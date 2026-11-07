@@ -11,7 +11,7 @@ np.random.seed(42)
 
 
 #==================================
-#2. Pré-processamento de dados
+# 2. Pré-processamento de dados
 #==================================
 iris = load_iris()
 X = iris.data                      # (150, 4) -> 4 características (comprimento e largura da sépala e da pétala)
@@ -36,7 +36,7 @@ print("Teste: ", X_test.shape, Y_test.shape)
 
 
 #==================================
-#3. Funções de ativação e perda
+# 3. Funções de ativação e perda
 #==================================
 def relu(Z):                       # Aplica a fórmula ReLU (negativos viram 0 e positivos passam iguais)
     return np.maximum(0, Z)    # np.maximum aplica a fórmula para toda a matriz
@@ -55,5 +55,24 @@ def cross_entropy(Y_real, Y_prev):      # Implementa a Entropia Cruzada
     return -np.sum(Y_real * np.log(Y_prev)) / n
 
 #### Teste ####
-print(relu(np.array([-2, 0, 3])))
-print(softmax(np.array([[3.2, 1.1, -0.5]])))
+#print(relu(np.array([-2, 0, 3])))
+#print(softmax(np.array([[3.2, 1.1, -0.5]])))
+
+
+#==================================
+# 4. Arquitetura e parâmetros
+#==================================
+n_entrada = 4      # 4 características do Iris
+n_escondida = 8    # 8 neurônios na camada escondida
+n_saida = 3        # 3 classes
+
+# Pesos aleatórios (inicialização He, adequada para ReLU)
+W1 = np.random.randn(n_entrada, n_escondida) * np.sqrt(2 / n_entrada)
+b1 = np.zeros((1, n_escondida))
+
+W2 = np.random.randn(n_escondida, n_saida) * np.sqrt(2 / n_escondida)
+b2 = np.zeros((1, n_saida))
+
+print("W1:", W1.shape, "b1:", b1.shape)
+print("W2:", W2.shape, "b2:", b2.shape)
+
