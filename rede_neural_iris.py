@@ -31,8 +31,8 @@ scaler = StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-print("Treino:", X_train.shape, Y_train.shape)
-print("Teste: ", X_test.shape, Y_test.shape)
+#print("Treino:", X_train.shape, Y_train.shape)
+#print("Teste: ", X_test.shape, Y_test.shape)
 
 
 #==================================
@@ -73,6 +73,42 @@ b1 = np.zeros((1, n_escondida))
 W2 = np.random.randn(n_escondida, n_saida) * np.sqrt(2 / n_escondida)
 b2 = np.zeros((1, n_saida))
 
-print("W1:", W1.shape, "b1:", b1.shape)
-print("W2:", W2.shape, "b2:", b2.shape)
+#print("W1:", W1.shape, "b1:", b1.shape)
+#print("W2:", W2.shape, "b2:", b2.shape)
 
+
+#=============================================
+# 5. Treinamento via Gradiente Descendente
+#=============================================
+taxa_aprendizado = 0.1
+epocas = 1000
+n = X_train.shape[0]   # 120 amostras de treino
+
+for epoca in range(epocas):
+    # FORWARD PASS
+    Z1 = X_train @ W1 + b1     # (120, 8) soma ponderada da camada escondida
+    A1 = relu(Z1)              # (120, 8) ativação ReLU
+    Z2 = A1 @ W2 + b2          # (120, 3) soma ponderada da camada de saída
+    A2 = softmax(Z2)           # (120, 3) probabilidades
+
+    # CÁLCULO DA PERDA (Mede o erro médio)
+    perda = cross_entropy(Y_train, A2)
+
+    # BACKWARD PASS (BACKPROPAGATION)
+    dZ2 = (A2 - Y_train) / n                 # (120, 3)
+    dW2 = A1.T @ dZ2                         # (8, 3)
+    db2 = np.sum(dZ2, axis=0, keepdims=True) # (1, 3)
+
+    dA1 = dZ2 @ W2.T                         # (120, 8)
+    dZ1 = dA1 * relu_derivada(Z1)            # (120, 8)
+    dW1 = X_train.T @ dZ1                    # (4, 8)
+    db1 = np.sum(dZ1, axis=0, keepdims=True) # (1, 8)
+
+    # ATUALIZAÇÃO DOS PESOS
+    W2 -= taxa_aprendizado * dW2
+    b2 -= taxa_aprendizado * db2
+    W1 -= taxa_aprendizado * dW1
+    b1 -= taxa_aprendizado * db1
+
+    if epoca % 100 == 0 or epoca == epocas - 1:
+        print(f"Época {epoca:4d} | Perda: {perda:.4f}")
