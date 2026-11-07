@@ -14,7 +14,7 @@ np.random.seed(42)
 #2. Pré-processamento de dados
 #==================================
 iris = load_iris()
-x = iris.data                      # (150, 4) -> 4 características (comprimento e largura da sépala e da pétala)
+X = iris.data                      # (150, 4) -> 4 características (comprimento e largura da sépala e da pétala)
 y = iris.target.reshape(-1, 1)     # (150, 1) -> classes 0, 1 ou 2
 
 # One-Hot Encoding: 0 -> [1,0,0] (Setosa), 1 -> [0,1,0] (Versicolor), 2 -> [0,0,1] (Virginica)
@@ -53,3 +53,7 @@ def cross_entropy(Y_real, Y_prev):      # Implementa a Entropia Cruzada
     n = Y_real.shape[0]
     Y_prev = np.clip(Y_prev, 1e-12, 1.0)
     return -np.sum(Y_real * np.log(Y_prev)) / n
+
+#### Teste ####
+print(relu(np.array([-2, 0, 3])))
+print(softmax(np.array([[3.2, 1.1, -0.5]])))
