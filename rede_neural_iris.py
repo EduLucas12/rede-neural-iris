@@ -115,7 +115,7 @@ for epoca in range(epocas):
 
 
 #=============================================
-# 4. Avaliação do Modelo
+# 6. Avaliação do Modelo
 #=============================================
 def prever(X):   # Mesmo Forward pass do treino, sem backward
     Z1 = X @ W1 + b1
